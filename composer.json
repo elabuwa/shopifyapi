@@ -1,0 +1,14 @@
+{
+    "name": "elabuwa/shopifyapi",
+    "description": "A set of APIs to retrieve data from Shopify",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "authors": [
+        {
+            "name": "Dileep Ratnayake",
+            "email": "dileep_ratnayake@hotmail.com"
+        }
+    ]
+}
