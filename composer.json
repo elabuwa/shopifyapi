@@ -17,7 +17,7 @@
     "autoload": {
         "classmap": ["src"],
         "psr-0": {
-            "elabuwa/shopifyapi": "src/"
+            "elabuwa\\shopifyapi\\": "src/"
         }
     }
 }
