@@ -7,6 +7,7 @@
     "require": {
         "guzzlehttp/guzzle": "^6.5"
     },
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Dileep Ratnayake",
@@ -14,6 +15,7 @@
         }
     ],
     "autoload": {
+        "classmap": ["src"],
         "psr-0": {
             "elabuwa/shopifyapi": "src/"
         }
