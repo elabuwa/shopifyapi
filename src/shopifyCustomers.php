@@ -5,11 +5,12 @@ use shopifyApi\shopifyApiCore;
 
 class shopifyCustomers extends shopifyApiCore{
 
-    public function __construct($userName,$password,$shopifyUrl)
+    public function __construct($userName,$password,$shopifyUrl,$apiVersion)
     {
         $this->userName = $userName;
         $this->password = $password;
         $this->storeShopifyUrl = $shopifyUrl;
+        $this->apiVersion = $apiVersion;
         parent::__construct();
     }
 
