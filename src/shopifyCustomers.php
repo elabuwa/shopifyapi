@@ -3,7 +3,7 @@ namespace elabuwa\ShopifyApi;
 
 use elabuwa\ShopifyApi\shopifyApiCore;
 
-class customers extends shopifyApiCore{
+class shopifyCustomers extends shopifyApiCore{
 
     public function __construct($userName,$password,$shopifyUrl)
     {
