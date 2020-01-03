@@ -1,5 +1,5 @@
 <?php
-namespace elabuwa\ShopifyApi;
+namespace shopifyApi;
 
 use GuzzleHttp\Client;
 

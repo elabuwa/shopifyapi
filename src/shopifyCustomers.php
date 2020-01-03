@@ -1,7 +1,7 @@
 <?php
-namespace elabuwa\ShopifyApi;
+namespace shopifyApi;
 
-use elabuwa\ShopifyApi\shopifyApiCore;
+use ShopifyApi\shopifyApiCore;
 
 class shopifyCustomers extends shopifyApiCore{
 
