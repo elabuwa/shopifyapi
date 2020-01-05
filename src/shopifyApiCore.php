@@ -2,6 +2,7 @@
 namespace shopifyApi;
 
 use GuzzleHttp\Client;
+use Exception;
 
 class shopifyApiCore {
     /**
