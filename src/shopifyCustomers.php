@@ -53,8 +53,14 @@ class shopifyCustomers extends shopifyApiCore{
 
     public function customerOrders($customerId)
     {
-        
         $this->queryUrl = $this->baseUrl . "customers/" . $customerId . "/orders.json";
+        $response = $this->getData();
+        return $response;
+    }
+
+    public function sendInviteEmail($customerId)
+    {
+        $this->queryUrl = $this->baseUrl . "customers/" . $customerId . "/send_invite.json";
         $response = $this->getData();
         return $response;
     }
