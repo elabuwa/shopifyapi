@@ -42,5 +42,11 @@ class shopifyProducts extends shopifyApiCore{
         return $response;
     }
 
+    public function getProductInfo($productId)
+    {
+        $this->queryUrl = $this->baseUrl . "products/" . $productId . ".json";
+        $response = $this->getData();
+        return $response;
+    }
 
 }
