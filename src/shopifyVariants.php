@@ -63,9 +63,7 @@ class shopifyVariants extends shopifyApiCore{
         $product = $prodBody['product'];
         $data['variant'] = $variant;
         $data['product'] = $product;
-
-        //Create new guzzle response for uniformity
-        $res = new Response(200, [] , $data);
-        return $res;
+        //Todo : send guzzle response object for uniformity
+        return json_encode($data);
     }
 }
