@@ -66,4 +66,23 @@ class shopifyVariants extends shopifyApiCore{
         //Todo : send guzzle response object for uniformity
         return json_encode($data);
     }
+
+    /**
+     * 
+     * Update stock for an inventory item id
+     * If you need to update for a particular variant, retrieve the variant data first.
+     * The data holds an inventory_item_id value.
+     * 
+     */
+
+    public function updateVariantStock($inventoryItemId, $location, $newQty)
+    {
+        $data['location_id'] = $location;
+        $data['inventory_item_id'] = $inventoryItemId;
+        $data['available'] = $newQty;
+
+        $this->queryUrl = $this->baseUrl . "inventory_levels/set.json";
+        $response = $this->postData($data);
+        return $response;
+    }
 }

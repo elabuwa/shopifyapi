@@ -31,4 +31,22 @@ class shopifyOrders extends shopifyApiCore{
         $response = $this->getData();
         return $response;
     }
+
+    /**
+     * Fulfill an order
+     */
+
+    public function fulfillOrder($id, $locationId, $trackingNumber = '', $trackingUrls = [], $notifyCustomer = false){
+        
+        $this->queryUrl = $this->baseUrl . "orders/" . $id . "/fulfillments.json";
+
+        $data['location_id'] = $locationId;
+        $data['tracking_number'] = $trackingNumber;
+        $data['tracking_urls'] = $trackingUrls;
+        $data['notify_customer'] = $notifyCustomer;
+        $payload['fulfillment'] = $data;
+
+        $response = $this->postData($payload);
+        return $response;
+    }
 }
