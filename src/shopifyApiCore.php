@@ -8,27 +8,27 @@ class shopifyApiCore {
     /**
      * @var string
      */
-    protected $userName;
+    public $userName;
 
     /**
      * @var string
      */
-    protected $password;
+    public $password;
     
     /**
      * @var string
      */
-    protected $storeShopifyUrl;
+    public $storeShopifyUrl;
     
     /**
      * @var string
      */
-    protected $baseUrl;
+    public $baseUrl;
 
     /**
      * @var string
      */
-    protected $queryUrl;
+    public $queryUrl;
 
     /**
      * Shopify updates their version from time to time.
@@ -36,7 +36,7 @@ class shopifyApiCore {
      *
      * @var string
      */
-    protected $apiVersion;
+    public $apiVersion;
 
     /***
      * Set true if you need Exception errors thrown in for HTTP Protocol errors such as 4xx,5xx
