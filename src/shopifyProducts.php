@@ -5,20 +5,9 @@ use shopifyApi\shopifyApiCore;
 
 class shopifyProducts extends shopifyApiCore{
 
-    /**
-     * The construct function. send credentials provided by Shopify to instantiate object
-     *
-     * @param string $userName
-     * @param string $password
-     * @param string $shopifyUrl
-     * @param string $apiVersion
-     */
-    public function __construct($userName,$password,$shopifyUrl,$apiVersion)
+
+    public function __construct(shopifyApiCore $core)
     {
-        $this->userName = $userName;
-        $this->password = $password;
-        $this->storeShopifyUrl = $shopifyUrl;
-        $this->apiVersion = $apiVersion;
         parent::__construct();
     }
 
