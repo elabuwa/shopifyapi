@@ -6,8 +6,12 @@ use shopifyApi\shopifyApiCore;
 class shopifyProducts extends shopifyApiCore{
 
 
-    public function __construct(shopifyApiCore $core)
+    public function __construct($credentials = [])
     {
+        $this->userName = $credentials['userName'];
+        $this->password = $credentials['password'];
+        $this->apiVersion = $credentials['apiVersion'];
+        $this->storeShopifyUrl = $credentials['storeShopifyUrl'];
         parent::__construct();
     }
 
