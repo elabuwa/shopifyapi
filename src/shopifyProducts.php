@@ -42,4 +42,11 @@ class shopifyProducts extends shopifyApiCore{
         return $response;
     }
 
+
+    public function getProductMetaFields($productId)
+    {
+        $this->queryUrl = $this->baseUrl . "products/" . $productId . "/metafields.json";
+        $response = $this->getData();
+        return $response;
+    }
 }
