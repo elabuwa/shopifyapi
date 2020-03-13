@@ -3,6 +3,7 @@ namespace shopifyApi;
 
 use GuzzleHttp\Client;
 use Exception;
+use http\Params;
 
 class shopifyApiCore {
     /**
@@ -29,6 +30,9 @@ class shopifyApiCore {
      * @var string
      */
     protected $queryUrl;
+
+    /** @var string */
+    protected $accessToken;
 
     /**
      * Shopify updates their version from time to time.
@@ -58,7 +62,12 @@ class shopifyApiCore {
     private function setUpBaseUrl()
     {
         $this->verifyCredentials();
-        $this->baseUrl = "https://" . $this->userName . ":" . $this->password . "@" . $this->storeShopifyUrl . "/admin/api/" . $this->apiVersion . "/";
+        if(isset($this->accessToken)){
+            $this->baseUrl = "https://" .  $this->storeShopifyUrl . "/admin/api/" . $this->apiVersion . "/";
+        } else {
+            $this->baseUrl = "https://" . $this->userName . ":" . $this->password . "@" . $this->storeShopifyUrl . "/admin/api/" . $this->apiVersion . "/";
+        }
+
     }
 
     /**
@@ -66,9 +75,22 @@ class shopifyApiCore {
      */
     private function verifyCredentials()
     {
-        if(!isset($this->userName) || !isset($this->password) || !isset($this->storeShopifyUrl) || !isset($this->apiVersion)){
-            throw new Exception("Missing Credential Or Store URL");
+
+        if(!isset($this->storeShopifyUrl)){
+            throw new Exception("Missing  Store URL");
         }
+        if(!isset($this->apiVersion)){
+            throw new Exception("Missing  API Version");
+        }
+        if(!isset($this->accessToken)){
+            if(!isset($this->userName) || !isset($this->password)){
+                throw new Exception("Missing Username or Password");
+            }
+        }
+        if(!isset($this->accessToken)) {
+            throw new Exception("Access Token Missing. Either user shopify api username and key or accessToken to conect");
+        }
+
     }
 
     /**
@@ -80,6 +102,9 @@ class shopifyApiCore {
     {
         $this->verifyCredentials();
         $client = new Client;
+        if(isset($this->accessToken)){
+            $headers['X-Shopify-Access-Token'] = $this->accessToken;
+        }
         $response = $client->request('GET', $this->queryUrl, [
             'query' => $queryParams,
             'headers' => $headers,
@@ -92,6 +117,9 @@ class shopifyApiCore {
     {
         $this->verifyCredentials();
         $client = new Client;
+        if(isset($this->accessToken)){
+            $headers['X-Shopify-Access-Token'] = $this->accessToken;
+        }
         $response = $client->request('POST', $this->queryUrl, [
             'json' => $postData,
             'headers' => $headers,

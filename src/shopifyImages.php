@@ -13,12 +13,23 @@ class shopifyImages extends shopifyApiCore{
      * @param string $shopifyUrl
      * @param string $apiVersion
      */
-    public function __construct($userName,$password,$shopifyUrl,$apiVersion)
+    public function __construct($credentials = [])
     {
-        $this->userName = $userName;
-        $this->password = $password;
-        $this->storeShopifyUrl = $shopifyUrl;
-        $this->apiVersion = $apiVersion;
+        if(array_key_exists('userName', $credentials)){
+            $this->userName = $credentials['userName'];
+        }
+        if(array_key_exists('password', $credentials)){
+            $this->password = $credentials['password'];
+        }
+        if(array_key_exists('apiVersion', $credentials)){
+            $this->apiVersion = $credentials['apiVersion'];
+        }
+        if(array_key_exists('storeShopifyUrl', $credentials)){
+            $this->storeShopifyUrl = $credentials['storeShopifyUrl'];
+        }
+        if(array_key_exists('accessToken', $credentials)){
+            $this->accessToken = $credentials['accessToken'];
+        }
         parent::__construct();
     }
 

@@ -8,10 +8,21 @@ class shopifyProducts extends shopifyApiCore{
 
     public function __construct($credentials = [])
     {
-        $this->userName = $credentials['userName'];
-        $this->password = $credentials['password'];
-        $this->apiVersion = $credentials['apiVersion'];
-        $this->storeShopifyUrl = $credentials['storeShopifyUrl'];
+        if(array_key_exists('userName', $credentials)){
+            $this->userName = $credentials['userName'];
+        }
+        if(array_key_exists('password', $credentials)){
+            $this->password = $credentials['password'];
+        }
+        if(array_key_exists('apiVersion', $credentials)){
+            $this->apiVersion = $credentials['apiVersion'];
+        }
+        if(array_key_exists('storeShopifyUrl', $credentials)){
+            $this->storeShopifyUrl = $credentials['storeShopifyUrl'];
+        }
+        if(array_key_exists('accessToken', $credentials)){
+            $this->accessToken = $credentials['accessToken'];
+        }
         parent::__construct();
     }
 
