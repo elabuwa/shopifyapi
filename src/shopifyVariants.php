@@ -66,16 +66,21 @@ class shopifyVariants extends shopifyApiCore{
     {
         $response = $this->getVariantInfo($variantId);
         $responseBody = json_decode($response->getBody(), true);
-        $variant = $responseBody['variant'];
-        $productId = $variant['product_id'];
-        $proObj = new shopifyProducts($this->userName, $this->password, $this->storeShopifyUrl, $this->apiVersion);
-        $prodResponse = $proObj->getProductInfo($productId);
-        $prodBody = json_decode($prodResponse->getBody(), true);
-        $product = $prodBody['product'];
-        $data['variant'] = $variant;
-        $data['product'] = $product;
-        //Todo : send guzzle response object for uniformity
-        return json_encode($data);
+        if(array_key_exists('variant', $responseBody)){
+            $variant = $responseBody['variant'];
+            $productId = $variant['product_id'];
+            $proObj = new shopifyProducts($this->userName, $this->password, $this->storeShopifyUrl, $this->apiVersion);
+            $prodResponse = $proObj->getProductInfo($productId);
+            $prodBody = json_decode($prodResponse->getBody(), true);
+            $product = $prodBody['product'];
+            $data['variant'] = $variant;
+            $data['product'] = $product;
+            //Todo : send guzzle response object for uniformity
+            return json_encode($data);
+        } else {
+            return null;
+        }
+
     }
 
     /**
