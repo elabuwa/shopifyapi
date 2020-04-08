@@ -76,4 +76,12 @@ class shopifyCustomers extends shopifyApiCore{
         return $response;
     }
 
+    public function createCustomer($data)
+    {
+        $this->queryUrl = $this->baseUrl . "customers.json";
+        $response = $this->postData($data);
+        return $response;
+    }
+
+
 }
