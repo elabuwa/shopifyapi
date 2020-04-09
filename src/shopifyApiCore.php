@@ -127,4 +127,16 @@ class shopifyApiCore {
         ]);
         return $response;
     }
+
+    protected function putData($postData, $headers = [])
+    {
+        $this->verifyCredentials();
+        $client = new Client;
+        $response = $client->request('PUT', $this->queryUrl, [
+            'json' => $postData,
+            'headers' => $headers,
+            'http_errors' => $this->http_errors
+        ]);
+        return $response;
+    }
 }
