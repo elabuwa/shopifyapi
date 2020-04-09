@@ -83,5 +83,11 @@ class shopifyCustomers extends shopifyApiCore{
         return $response;
     }
 
+    public function updateCustomer($customerId, $data)
+    {
+        $this->queryUrl = $this->baseUrl . "customers/$customerId.json";
+        $response = $this->putData($data);
+        return $response;
+    }
 
 }
