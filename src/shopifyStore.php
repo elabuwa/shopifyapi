@@ -34,10 +34,8 @@ class shopifyStore extends shopifyApiCore{
     }
 
     /**
-     * Retrieve all customers from store
-     * Send params array to define extra search params
+     * Retrieve store information
      *
-     * @param array $params
      * @return void
      */
     public function storeInformation()
