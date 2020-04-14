@@ -3,7 +3,7 @@ namespace shopifyApi;
 
 use shopifyApi\shopifyApiCore;
 
-class shopifyCustomers extends shopifyApiCore{
+class shopifyStore extends shopifyApiCore{
 
     /**
      * The construct function. send credentials provided by Shopify to instantiate object
