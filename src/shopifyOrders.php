@@ -56,4 +56,13 @@ class shopifyOrders extends shopifyApiCore{
         $response = $this->postData($data);
         return $response;
     }
+
+    public function getOrders($data)
+    {
+        $this->queryUrl = $this->baseUrl . "orders.json";
+        $response = $this->getData($data);
+        return $response;
+    }
+
+
 }
