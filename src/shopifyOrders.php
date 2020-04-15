@@ -70,6 +70,10 @@ class shopifyOrders extends shopifyApiCore{
 
     public function getOrders($data)
     {
+        if(!array_key_exists('limit', $data)){
+            //If no limit has been defined, grab 250 (the maximum given by Shopify for a request)
+            $data['limit'] = 250;
+        }
         $this->queryUrl = $this->baseUrl . "orders.json";
         $response = $this->getData($data);
         return $response;
