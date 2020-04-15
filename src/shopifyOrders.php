@@ -68,5 +68,12 @@ class shopifyOrders extends shopifyApiCore{
         return $response;
     }
 
+    public function updateOrder($data, $orderId)
+    {
+        $this->queryUrl = $this->baseUrl . "orders/" . $orderId . ".json";
+        $response = $this->putData($data);
+        return $response;
+    }
+
 
 }
