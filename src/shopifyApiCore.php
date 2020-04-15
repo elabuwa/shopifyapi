@@ -100,13 +100,18 @@ class shopifyApiCore {
      */
     protected function getData($queryParams = [], $headers = [])
     {
+        //Can't use 'query' in Guzzle. It encodes the - character, so the shopify response doesn't work
+        $this->queryUrl = $this->queryUrl . '?';
+        foreach($queryParams as $key => $value){
+            $this->queryUrl .= '&' . $key . '=' . $value;
+        }
         $this->verifyCredentials();
         $client = new Client;
         if(isset($this->accessToken)){
             $headers['X-Shopify-Access-Token'] = $this->accessToken;
         }
         $response = $client->request('GET', $this->queryUrl, [
-            'query' => $queryParams,
+            //'query' => $queryParams,
             'headers' => $headers,
             'http_errors' => $this->http_errors
         ]);
