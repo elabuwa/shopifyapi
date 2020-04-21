@@ -87,9 +87,9 @@ class shopifyApiCore {
                 throw new Exception("Missing Username or Password");
             }
         }
-        if(!isset($this->accessToken)) {
-            throw new Exception("Access Token Missing. Either user shopify api username and key or accessToken to conect");
-        }
+//        if(!isset($this->accessToken)) {
+//            throw new Exception("Access Token Missing. Either user shopify api username and key or accessToken to conect");
+//        }
 
     }
 
