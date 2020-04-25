@@ -22,13 +22,10 @@ $credentials => [
     'apiVersion' => env('SHOPIFY_API_VERSION', ''),
     'storeShopifyUrl' => env('SHOPIFY_URL', '')
 ];
-$customer = new shopifyCustomers($credentials);
-/** @var http\Client\Response $res */
-$response = $customer->customerInfo('customerID');
-echo $response->getBody();
-echo  $response->getStatusCode();
+$customerObj = new shopifyCustomers($credentials);
+$response = $customerObj->customerInfo('customerID');
+var_dump($response['customer']);
 ```
-You can use anything that's available at http://docs.guzzlephp.org/en/stable/quickstart.html#using-responses
 
 ### Plugins
 
