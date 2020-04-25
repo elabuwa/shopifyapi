@@ -137,10 +137,28 @@ class shopifyApiCore {
     {
         $this->verifyCredentials();
         $client = new Client;
+        if(isset($this->accessToken)){
+            $headers['X-Shopify-Access-Token'] = $this->accessToken;
+        }
         $response = $client->request('PUT', $this->queryUrl, [
             'json' => $postData,
             'headers' => $headers,
             'http_errors' => $this->http_errors
+        ]);
+        return $response;
+    }
+
+    protected function getUrlContents()
+    {
+        $this->verifyCredentials();
+        $client = new Client;
+        $headers = [];
+        if(isset($this->accessToken)){
+            $headers['X-Shopify-Access-Token'] = $this->accessToken;
+        }
+        $response = $client->request('GET', $this->queryUrl, [
+            'http_errors' => $this->http_errors,
+            'headers' => $headers,
         ]);
         return $response;
     }
