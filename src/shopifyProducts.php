@@ -79,4 +79,17 @@ class shopifyProducts extends shopifyApiCore{
         $response = $this->getData($params);
         return json_decode($response, true);
     }
+
+    /**
+     * Count Metafields For A Product
+     * @param string $productId
+     * @return integer
+     */
+    public function countMetaFields($productId)
+    {
+        $this->queryUrl = $this->baseUrl . "products/" . $productId . "/metafields/count.json";
+        /** @var Response $response */
+        $response = $this->getData();
+        return json_decode($response->getBody(), true);
+    }
 }
