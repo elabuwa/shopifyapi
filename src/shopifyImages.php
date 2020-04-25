@@ -1,6 +1,7 @@
 <?php
 namespace shopifyApi;
 
+use GuzzleHttp\Psr7\Response;
 use shopifyApi\shopifyApiCore;
 
 class shopifyImages extends shopifyApiCore{
@@ -8,10 +9,7 @@ class shopifyImages extends shopifyApiCore{
     /**
      * The construct function. send credentials provided by Shopify to instantiate object
      *
-     * @param string $userName
-     * @param string $password
-     * @param string $shopifyUrl
-     * @param string $apiVersion
+     * @param array $credentials
      */
     public function __construct($credentials = [])
     {
@@ -33,6 +31,12 @@ class shopifyImages extends shopifyApiCore{
         parent::__construct();
     }
 
+    /**
+     * @param string $productId
+     * @param string $src
+     * @param boolean $mainImage
+     * @return array
+     */
     public function uploadImageFromUrl($productId, $src, $mainImage = false)
     {
         $data['image']['src'] = $src;
@@ -40,7 +44,8 @@ class shopifyImages extends shopifyApiCore{
             $data['image']['position'] = 1;
         }
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/images.json";
+        /** @var Response $response */
         $response = $this->postData($data);
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 }

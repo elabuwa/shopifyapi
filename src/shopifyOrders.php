@@ -1,6 +1,7 @@
 <?php
 namespace shopifyApi;
 
+use GuzzleHttp\Psr7\Response;
 use shopifyApi\shopifyApiCore;
 
 class shopifyOrders extends shopifyApiCore{
@@ -8,10 +9,7 @@ class shopifyOrders extends shopifyApiCore{
     /**
      * The construct function. send credentials provided by Shopify to instantiate object
      *
-     * @param string $userName
-     * @param string $password
-     * @param string $shopifyUrl
-     * @param string $apiVersion
+     * @param array $credentials
      */
     public function __construct($credentials = [])
     {
@@ -35,16 +33,25 @@ class shopifyOrders extends shopifyApiCore{
 
     /**
      * Retrieve Shopify Order
+     * @param string $id
+     * @return array
      */ 
     public function retrieveOrder($id)
     {
         $this->queryUrl = $this->baseUrl . "orders/" . $id . ".json";
+        /** @var Response $response */
         $response = $this->getData();
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
     /**
      * Fulfill an order
+     * @param string $id
+     * @param string $locationId
+     * @param string $trackingNumber
+     * @param array $trackingUrls
+     * @param boolean $notifyCustomer
+     * @return array
      */
 
     public function fulfillOrder($id, $locationId, $trackingNumber = '', $trackingUrls = [], $notifyCustomer = false){
@@ -56,18 +63,30 @@ class shopifyOrders extends shopifyApiCore{
         $data['tracking_urls'] = $trackingUrls;
         $data['notify_customer'] = $notifyCustomer;
         $payload['fulfillment'] = $data;
-
+        /** @var Response $response */
         $response = $this->postData($payload);
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
+    /**
+     * Create a shopify Order
+     * @param array $data
+     * return array
+     */
     public function createOrder($data)
     {
         $this->queryUrl = $this->baseUrl . "orders.json";
+        /** @var Response $response */
         $response = $this->postData($data);
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
+    /**
+     * Retrieve Orders From Shopify
+     * Todo : Fix the 250 pagination limit
+     * @param array $data
+     * @return array
+     */
     public function getOrders($data)
     {
         if(!array_key_exists('limit', $data)){
@@ -75,15 +94,23 @@ class shopifyOrders extends shopifyApiCore{
             $data['limit'] = 250;
         }
         $this->queryUrl = $this->baseUrl . "orders.json";
+        /** @var Response $response */
         $response = $this->getData($data);
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
+    /**
+     * Update Shopify Order
+     * @param array $data
+     * @param string $orderId
+     * @return array
+     */
     public function updateOrder($data, $orderId)
     {
         $this->queryUrl = $this->baseUrl . "orders/" . $orderId . ".json";
+        /** @var Response $response */
         $response = $this->putData($data);
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
 

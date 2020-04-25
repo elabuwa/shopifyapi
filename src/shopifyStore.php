@@ -1,6 +1,7 @@
 <?php
 namespace shopifyApi;
 
+use GuzzleHttp\Psr7\Response;
 use shopifyApi\shopifyApiCore;
 
 class shopifyStore extends shopifyApiCore{
@@ -8,10 +9,7 @@ class shopifyStore extends shopifyApiCore{
     /**
      * The construct function. send credentials provided by Shopify to instantiate object
      *
-     * @param string $userName
-     * @param string $password
-     * @param string $shopifyUrl
-     * @param string $apiVersion
+     * @param array $credentials
      */
     public function __construct($credentials = [])
     {
@@ -36,13 +34,14 @@ class shopifyStore extends shopifyApiCore{
     /**
      * Retrieve store information
      *
-     * @return void
+     * @return array
      */
     public function storeInformation()
     {
         $this->queryUrl = $this->baseUrl . "shop.json";
+        /** @var Response $response */
         $response = $this->getData();
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
 }

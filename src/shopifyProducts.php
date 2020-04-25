@@ -1,11 +1,15 @@
 <?php
 namespace shopifyApi;
 
+use GuzzleHttp\Psr7\Response;
 use shopifyApi\shopifyApiCore;
 
 class shopifyProducts extends shopifyApiCore{
 
-
+    /**
+     * The construct function. send credentials provided by Shopify to instantiate object
+     * @param array $credentials
+     */
     public function __construct($credentials = [])
     {
         if(array_key_exists('userName', $credentials)){
@@ -42,22 +46,37 @@ class shopifyProducts extends shopifyApiCore{
             $params['limit'] = 250;
         }
         $this->queryUrl = $this->baseUrl . "products.json";
+        /** @var Response $response */
         $response = $this->getData($params);
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
+    /**
+     * Get Product Information
+     * @param string $productId
+     * @return arrau
+     */
     public function getProductInfo($productId)
     {
         $this->queryUrl = $this->baseUrl . "products/" . $productId . ".json";
+        /** @var Response $response */
         $response = $this->getData();
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
 
+    /**
+     * Get Metafields for Product
+     * Todo : Fix the 250 limit issue
+     * @param string $productId
+     * @return array
+     */
     public function getProductMetaFields($productId)
     {
+        $params['limit'] = 250;
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/metafields.json";
-        $response = $this->getData();
-        return $response;
+        /** @var Response $response */
+        $response = $this->getData($params);
+        return json_decode($response, true);
     }
 }

@@ -10,11 +10,10 @@ class shopifyVariants extends shopifyApiCore{
     /**
      * The construct function. send credentials provided by Shopify to instantiate object
      *
-     * @param string $userName
-     * @param string $password
-     * @param string $shopifyUrl
-     * @param string $apiVersion
+     * @param string $credentials
      */
+    private $credentials = [];
+
     public function __construct($credentials = [])
     {
         if(array_key_exists('userName', $credentials)){
@@ -32,6 +31,7 @@ class shopifyVariants extends shopifyApiCore{
         if(array_key_exists('accessToken', $credentials)){
             $this->accessToken = $credentials['accessToken'];
         }
+        $this->credentials = $credentials;
         parent::__construct();
     }
 
@@ -45,8 +45,9 @@ class shopifyVariants extends shopifyApiCore{
     public function getAllVariants($productId)
     {
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/variants.json";
+        /** @var Response $response */
         $response = $this->getData();
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
     /**
@@ -58,10 +59,16 @@ class shopifyVariants extends shopifyApiCore{
     public function getVariantInfo($variantId)
     {
         $this->queryUrl = $this->baseUrl . "variants/" . $variantId . ".json";
+        /** @var Response $response */
         $response = $this->getData();
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
+    /**
+     * Get product and variants for the product
+     * @param string $variantId
+     * @return array|null
+     */
     public function getVariantAndProductInfo($variantId)
     {
         $response = $this->getVariantInfo($variantId);
@@ -69,14 +76,14 @@ class shopifyVariants extends shopifyApiCore{
         if(array_key_exists('variant', $responseBody)){
             $variant = $responseBody['variant'];
             $productId = $variant['product_id'];
-            $proObj = new shopifyProducts($this->userName, $this->password, $this->storeShopifyUrl, $this->apiVersion);
+            $proObj = new shopifyProducts($this->credentials);
             $prodResponse = $proObj->getProductInfo($productId);
             $prodBody = json_decode($prodResponse->getBody(), true);
             $product = $prodBody['product'];
             $data['variant'] = $variant;
             $data['product'] = $product;
             //Todo : send guzzle response object for uniformity
-            return json_encode($data);
+            return $data;
         } else {
             return null;
         }
@@ -88,7 +95,10 @@ class shopifyVariants extends shopifyApiCore{
      * Update stock for an inventory item id
      * If you need to update for a particular variant, retrieve the variant data first.
      * The data holds an inventory_item_id value.
-     * 
+     * @param string $inventoryItemId
+     * @param string $location
+     * @param integer $newQty
+     * @return array
      */
 
     public function updateVariantStock($inventoryItemId, $location, $newQty)
@@ -96,9 +106,9 @@ class shopifyVariants extends shopifyApiCore{
         $data['location_id'] = $location;
         $data['inventory_item_id'] = $inventoryItemId;
         $data['available'] = $newQty;
-
         $this->queryUrl = $this->baseUrl . "inventory_levels/set.json";
+        /** @var Response $response */
         $response = $this->postData($data);
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 }
