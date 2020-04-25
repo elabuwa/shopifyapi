@@ -47,7 +47,12 @@ class shopifyVariants extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/variants.json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -61,7 +66,12 @@ class shopifyVariants extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "variants/" . $variantId . ".json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -109,6 +119,11 @@ class shopifyVariants extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "inventory_levels/set.json";
         /** @var Response $response */
         $response = $this->postData($data);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 }

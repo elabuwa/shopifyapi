@@ -42,7 +42,12 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers.json";
         /** @var Response $response */
         $response = $this->getData($params);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -54,7 +59,12 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers/count.json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -67,7 +77,12 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers/" . $customerId . ".json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -81,7 +96,12 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers/" . $customerId . "/orders.json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -94,7 +114,12 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers/" . $customerId . "/send_invite.json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -107,7 +132,12 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers.json";
         /** @var Response $response */
         $response = $this->postData($data);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -121,7 +151,12 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers/$customerId.json";
         /** @var Response $response */
         $response = $this->putData($data);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
 }

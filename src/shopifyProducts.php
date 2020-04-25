@@ -2,6 +2,7 @@
 namespace shopifyApi;
 
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\MessageInterface;
 use shopifyApi\shopifyApiCore;
 
 class shopifyProducts extends shopifyApiCore{
@@ -48,7 +49,12 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products.json";
         /** @var Response $response */
         $response = $this->getData($params);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -61,7 +67,12 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products/" . $productId . ".json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
 
@@ -77,6 +88,12 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/metafields.json";
         /** @var Response $response */
         $response = $this->getData($params);
+        $headers = $response->getHeaders();
+        if(array_key_exists('Link', $headers)){
+
+        } else {
+
+        }
         return json_decode($response, true);
     }
 
@@ -90,6 +107,13 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/metafields/count.json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+
     }
 }

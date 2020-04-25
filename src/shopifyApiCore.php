@@ -34,6 +34,9 @@ class shopifyApiCore {
     /** @var string */
     protected $accessToken;
 
+    /** @var bool  */
+    protected $responseObj = false;
+
     /**
      * Shopify updates their version from time to time.
      * The API version you wish to use can be changed by updating this propery.

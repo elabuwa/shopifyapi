@@ -46,6 +46,11 @@ class shopifyImages extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/images.json";
         /** @var Response $response */
         $response = $this->postData($data);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 }
