@@ -1,7 +1,9 @@
 <?php
 namespace shopifyApi;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Stream;
 use Psr\Http\Message\MessageInterface;
 use shopifyApi\shopifyApiCore;
 
@@ -89,12 +91,52 @@ class shopifyProducts extends shopifyApiCore{
         /** @var Response $response */
         $response = $this->getData($params);
         $headers = $response->getHeaders();
-        if(array_key_exists('Link', $headers)){
 
+        $linkExist = array_key_exists('Link', $headers);
+        if($linkExist) {
+            $body = json_decode($response->getBody(), true);
+            $headerLink = $headers['Link'];
+            $response = $this->getPaginatedResults($headerLink, 'metafields');
+
+            $data = [];
+            $data['metafields'] = array_merge($body['metafields'], $response['data']);
+
+            if($this->responseObj){
+                //Return response obj if set to true
+                $mockResponse = new Response(200, $response['headers'], $data);
+                return $mockResponse;
+            } else {
+                return $data;
+            }
+
+//            while ($linkExist) {
+//                $nextUrl = $this->getNextUrl($headerLink);
+//
+//                if(!$this->accessToken){
+//                    //Add the username,password to the URL if access token is not present
+//                    $urlParts = parse_url($nextUrl);
+//                    $urlParts['host'] = $this->userName . ":" . $this->password . '@' . $urlParts['host'];
+//                    $nextUrl = $this->buildUrl($urlParts);
+//                }
+//                $resp = $this->getUrlContents($nextUrl);
+//
+//                $tempBody = json_decode($resp->getBody(), true);
+//                $metaFields = array_merge($metaFields, $tempBody['metafields']);
+//
+//                $headers = $resp->getHeaders();
+//                $headerLink = $headers['Link'];
+//                if($this->getNextUrl($headerLink) == null){
+//                    $linkExist = false;
+//                }
+//            }
         } else {
-
+            if($this->responseObj){
+                //Return response obj if set to true
+                return $response;
+            } else {
+                return json_decode($response->getBody(), true);
+            }
         }
-        return json_decode($response, true);
     }
 
     /**
@@ -114,6 +156,7 @@ class shopifyProducts extends shopifyApiCore{
         } else {
             return json_decode($response->getBody(), true);
         }
-
     }
+
+
 }
