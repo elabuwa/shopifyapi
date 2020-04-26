@@ -34,6 +34,9 @@ class shopifyApiCore {
     /** @var string */
     protected $accessToken;
 
+    /** @var bool  */
+    protected $responseObj = false;
+
     /**
      * Shopify updates their version from time to time.
      * The API version you wish to use can be changed by updating this propery.
@@ -137,11 +140,116 @@ class shopifyApiCore {
     {
         $this->verifyCredentials();
         $client = new Client;
+        if(isset($this->accessToken)){
+            $headers['X-Shopify-Access-Token'] = $this->accessToken;
+        }
         $response = $client->request('PUT', $this->queryUrl, [
             'json' => $postData,
             'headers' => $headers,
             'http_errors' => $this->http_errors
         ]);
         return $response;
+    }
+
+    /**
+     * Retrieve Contents for a given url
+     * @param string $url
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws Exception
+     */
+    protected function getUrlContents($url)
+    {
+        $this->verifyCredentials();
+        $client = new Client;
+        $headers = [];
+        if(isset($this->accessToken)){
+            $headers['X-Shopify-Access-Token'] = $this->accessToken;
+        }
+        $response = $client->request('GET', $url, [
+            'http_errors' => $this->http_errors,
+            'headers' => $headers,
+        ]);
+        return $response;
+    }
+
+    /**
+     * Go through the Link header element and identify the next page link
+     * @param string $linkHeader
+     * @return string|null
+     */
+    protected function getNextUrl($linkHeader)
+    {
+        $links = explode(',', $linkHeader);
+        $nextStr = '';
+        foreach ($links as $link){
+            if(stripos($link, 'rel="next"' ) !== false){
+                $nextStr = $link;
+                break;
+            }
+        }
+        if($nextStr == ''){
+            return null;
+        } else {
+            $nextStr = str_replace('<', '', $nextStr);
+            return substr($nextStr, 0, stripos($nextStr, '>'));
+        }
+    }
+
+    /**
+     * Re-construct url from array. Reverse of url_parse function
+     * @param array $parts
+     * @return string
+     */
+    protected function buildUrl($parts = [])
+    {
+        $scheme   = isset($parts['scheme']) ? ($parts['scheme'] . '://') : '';
+
+        $host     = $parts['host'] ?? '';
+        $port     = isset($parts['port']) ? (':' . $parts['port']) : '';
+
+        $user     = $parts['user'] ?? '';
+        $pass     = isset($parts['pass']) ? (':' . $parts['pass'])  : '';
+        $pass     = ($user || $pass) ? ($pass . '@') : '';
+
+        $path     = $parts['path'] ?? '';
+
+        $query    = empty($parts['query']) ? '' : ('?' . $parts['query']);
+
+        $fragment = empty($parts['fragment']) ? '' : ('#' . $parts['fragment']);
+
+        return implode('', [$scheme, $user, $pass, $host, $port, $path, $query, $fragment]);
+    }
+
+    /**
+     * Go through all paginated links and retrieve data
+     * @param string $nextUrl
+     * @param string $keyName
+     * @return array
+     */
+    protected function getPaginatedResults($nextUrl, $keyName)
+    {
+        $responseData = [];
+        $responseHeader = [];
+        $hasNextLink = true;
+        while($hasNextLink) {
+            if (!$this->accessToken) {
+                //Add the username,password to the URL if access token is not present
+                $urlParts = parse_url($nextUrl);
+                $urlParts['host'] = $this->userName . ":" . $this->password . '@' . $urlParts['host'];
+                $nextUrl = $this->buildUrl($urlParts);
+            }
+            $resp = $this->getUrlContents($nextUrl);
+
+            $tempBody = json_decode($resp->getBody(), true);
+            $responseData = array_merge($responseData, $tempBody[$keyName]);
+
+            $responseHeader = $resp->getHeaders();
+            $headerLink = $responseHeader['Link'];
+            $nextUrl = $this->getNextUrl($headerLink);
+            if ($nextUrl == null) {
+                $hasNextLink = false;
+            }
+        }
+        return ['data' => $responseData, 'headers' => $responseHeader];
     }
 }

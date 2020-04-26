@@ -1,7 +1,10 @@
 <?php
 namespace shopifyApi;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Stream;
+use Psr\Http\Message\MessageInterface;
 use shopifyApi\shopifyApiCore;
 
 class shopifyProducts extends shopifyApiCore{
@@ -48,7 +51,12 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products.json";
         /** @var Response $response */
         $response = $this->getData($params);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -61,7 +69,12 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products/" . $productId . ".json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
 
@@ -77,6 +90,73 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/metafields.json";
         /** @var Response $response */
         $response = $this->getData($params);
-        return json_decode($response, true);
+        $headers = $response->getHeaders();
+
+        $linkExist = array_key_exists('Link', $headers);
+        if($linkExist) {
+            $body = json_decode($response->getBody(), true);
+            $headerLink = $headers['Link'];
+            $response = $this->getPaginatedResults($headerLink, 'metafields');
+
+            $data = [];
+            $data['metafields'] = array_merge($body['metafields'], $response['data']);
+
+            if($this->responseObj){
+                //Return response obj if set to true
+                $mockResponse = new Response(200, $response['headers'], $data);
+                return $mockResponse;
+            } else {
+                return $data;
+            }
+
+//            while ($linkExist) {
+//                $nextUrl = $this->getNextUrl($headerLink);
+//
+//                if(!$this->accessToken){
+//                    //Add the username,password to the URL if access token is not present
+//                    $urlParts = parse_url($nextUrl);
+//                    $urlParts['host'] = $this->userName . ":" . $this->password . '@' . $urlParts['host'];
+//                    $nextUrl = $this->buildUrl($urlParts);
+//                }
+//                $resp = $this->getUrlContents($nextUrl);
+//
+//                $tempBody = json_decode($resp->getBody(), true);
+//                $metaFields = array_merge($metaFields, $tempBody['metafields']);
+//
+//                $headers = $resp->getHeaders();
+//                $headerLink = $headers['Link'];
+//                if($this->getNextUrl($headerLink) == null){
+//                    $linkExist = false;
+//                }
+//            }
+        } else {
+            if($this->responseObj){
+                //Return response obj if set to true
+                return $response;
+            } else {
+                return json_decode($response->getBody(), true);
+            }
+        }
     }
+
+    /**
+     * Count Metafields For A Product
+     * @param string $productId
+     * @return integer
+     */
+    public function countMetaFields($productId)
+    {
+        $this->queryUrl = $this->baseUrl . "products/" . $productId . "/metafields/count.json";
+        /** @var Response $response */
+        $response = $this->getData();
+
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
+
 }

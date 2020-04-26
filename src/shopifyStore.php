@@ -41,7 +41,12 @@ class shopifyStore extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "shop.json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
 }

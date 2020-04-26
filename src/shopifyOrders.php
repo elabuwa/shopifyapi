@@ -41,7 +41,12 @@ class shopifyOrders extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "orders/" . $id . ".json";
         /** @var Response $response */
         $response = $this->getData();
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -65,7 +70,12 @@ class shopifyOrders extends shopifyApiCore{
         $payload['fulfillment'] = $data;
         /** @var Response $response */
         $response = $this->postData($payload);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -78,7 +88,12 @@ class shopifyOrders extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "orders.json";
         /** @var Response $response */
         $response = $this->postData($data);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -96,7 +111,12 @@ class shopifyOrders extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "orders.json";
         /** @var Response $response */
         $response = $this->getData($data);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
     /**
@@ -110,7 +130,12 @@ class shopifyOrders extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "orders/" . $orderId . ".json";
         /** @var Response $response */
         $response = $this->putData($data);
-        return json_decode($response->getBody(), true);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
     }
 
 
