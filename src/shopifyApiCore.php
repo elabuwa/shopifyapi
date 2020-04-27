@@ -179,7 +179,16 @@ class shopifyApiCore {
      */
     protected function getNextUrl($linkHeader)
     {
-        $links = explode(',', $linkHeader);
+        if(is_string($linkHeader)){
+            $links = explode(',', $linkHeader);
+        } else {
+            if(is_array($linkHeader)) {
+                $links = explode(',', $linkHeader[0]);
+            } else {
+                return null;
+            }
+        }
+
         $nextStr = '';
         foreach ($links as $link){
             if(stripos($link, 'rel="next"' ) !== false){
@@ -196,31 +205,6 @@ class shopifyApiCore {
     }
 
     /**
-     * Re-construct url from array. Reverse of url_parse function
-     * @param array $parts
-     * @return string
-     */
-    protected function buildUrl($parts = [])
-    {
-        $scheme   = isset($parts['scheme']) ? ($parts['scheme'] . '://') : '';
-
-        $host     = $parts['host'] ?? '';
-        $port     = isset($parts['port']) ? (':' . $parts['port']) : '';
-
-        $user     = $parts['user'] ?? '';
-        $pass     = isset($parts['pass']) ? (':' . $parts['pass'])  : '';
-        $pass     = ($user || $pass) ? ($pass . '@') : '';
-
-        $path     = $parts['path'] ?? '';
-
-        $query    = empty($parts['query']) ? '' : ('?' . $parts['query']);
-
-        $fragment = empty($parts['fragment']) ? '' : ('#' . $parts['fragment']);
-
-        return implode('', [$scheme, $user, $pass, $host, $port, $path, $query, $fragment]);
-    }
-
-    /**
      * Go through all paginated links and retrieve data
      * @param string $nextUrl
      * @param string $keyName
@@ -231,13 +215,17 @@ class shopifyApiCore {
         $responseData = [];
         $responseHeader = [];
         $hasNextLink = true;
+        $i = 0;
         while($hasNextLink) {
             if (!$this->accessToken) {
                 //Add the username,password to the URL if access token is not present
-                $urlParts = parse_url($nextUrl);
-                $urlParts['host'] = $this->userName . ":" . $this->password . '@' . $urlParts['host'];
-                $nextUrl = $this->buildUrl($urlParts);
+                // Todo : parse_url doesn't identify host. Find out reason
+                $nextUrl = trim(str_replace($this->storeShopifyUrl, $this->userName . ":" . $this->password . '@' . $this->storeShopifyUrl, $nextUrl));
             }
+            if(filter_var($nextUrl, FILTER_VALIDATE_URL) === false){
+                return ['data' => $responseData, 'headers' => $responseHeader];
+            }
+
             $resp = $this->getUrlContents($nextUrl);
 
             $tempBody = json_decode($resp->getBody(), true);
@@ -249,6 +237,7 @@ class shopifyApiCore {
             if ($nextUrl == null) {
                 $hasNextLink = false;
             }
+            $i++;
         }
         return ['data' => $responseData, 'headers' => $responseHeader];
     }
