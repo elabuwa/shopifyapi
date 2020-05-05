@@ -51,11 +51,31 @@ class shopifyProducts extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "products.json";
         /** @var Response $response */
         $response = $this->getData($params);
-        if($this->responseObj){
-            //Return response obj if set to true
-            return $response;
+        $headers = $response->getHeaders();
+
+        $linkExist = array_key_exists('Link', $headers);
+        if($linkExist) {
+            $body = json_decode($response->getBody(), true);
+            $headerLink = $headers['Link'];
+            $response = $this->getPaginatedResults($headerLink, 'products');
+
+            $data = [];
+            $data['products'] = array_merge($body['products'], $response['data']);
+
+            if($this->responseObj){
+                //Return response obj if set to true
+                $mockResponse = new Response(200, $response['headers'], $data);
+                return $mockResponse;
+            } else {
+                return $data;
+            }
         } else {
-            return json_decode($response->getBody(), true);
+            if($this->responseObj){
+                //Return response obj if set to true
+                return $response;
+            } else {
+                return json_decode($response->getBody(), true);
+            }
         }
     }
 
@@ -108,27 +128,6 @@ class shopifyProducts extends shopifyApiCore{
             } else {
                 return $data;
             }
-
-//            while ($linkExist) {
-//                $nextUrl = $this->getNextUrl($headerLink);
-//
-//                if(!$this->accessToken){
-//                    //Add the username,password to the URL if access token is not present
-//                    $urlParts = parse_url($nextUrl);
-//                    $urlParts['host'] = $this->userName . ":" . $this->password . '@' . $urlParts['host'];
-//                    $nextUrl = $this->buildUrl($urlParts);
-//                }
-//                $resp = $this->getUrlContents($nextUrl);
-//
-//                $tempBody = json_decode($resp->getBody(), true);
-//                $metaFields = array_merge($metaFields, $tempBody['metafields']);
-//
-//                $headers = $resp->getHeaders();
-//                $headerLink = $headers['Link'];
-//                if($this->getNextUrl($headerLink) == null){
-//                    $linkExist = false;
-//                }
-//            }
         } else {
             if($this->responseObj){
                 //Return response obj if set to true
