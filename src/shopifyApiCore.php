@@ -15,12 +15,12 @@ class shopifyApiCore {
      * @var string
      */
     protected $password;
-    
+
     /**
      * @var string
      */
     protected $storeShopifyUrl;
-    
+
     /**
      * @var string
      */
@@ -50,7 +50,7 @@ class shopifyApiCore {
      * http://docs.guzzlephp.org/en/stable/request-options.html#http-errors
      * Comes true by default
      * @var boolean
-    */
+     */
     protected $http_errors = false;
 
     public function __construct()
@@ -220,7 +220,9 @@ class shopifyApiCore {
             if (!$this->accessToken) {
                 //Add the username,password to the URL if access token is not present
                 // Todo : parse_url doesn't identify host. Find out reason
-                $nextUrl = str_replace($this->storeShopifyUrl, $this->userName . ":" . $this->password . '@' . $this->storeShopifyUrl, $nextUrl[0]);
+                $nextUrl = trim(str_replace($this->storeShopifyUrl, $this->userName . ":" . $this->password . '@' . $this->storeShopifyUrl, $nextUrl));
+                //$nextUrl = trim(str_replace($this->storeShopifyUrl, $this->userName . ":" . $this->password . '@' . $this->storeShopifyUrl, $nextUrl));
+
             }
             if(filter_var($nextUrl, FILTER_VALIDATE_URL) === false){
                 return ['data' => $responseData, 'headers' => $responseHeader];
