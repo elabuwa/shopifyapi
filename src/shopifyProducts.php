@@ -36,7 +36,7 @@ class shopifyProducts extends shopifyApiCore{
     /**
      * Retrieve all products from store
      * Send params array to define extra search params
-     * 
+     *
      * Todo : Read response header to get additional pages where product count is more than 250
      *
      * @param array $params
@@ -57,7 +57,8 @@ class shopifyProducts extends shopifyApiCore{
         if($linkExist) {
             $body = json_decode($response->getBody(), true);
             $headerLink = $headers['Link'];
-            $response = $this->getPaginatedResults($headerLink, 'products');
+            $nextUrl = $this->getNextUrl($headerLink);
+            $response = $this->getPaginatedResults($nextUrl, 'products');
 
             $data = [];
             $data['products'] = array_merge($body['products'], $response['data']);
@@ -116,7 +117,8 @@ class shopifyProducts extends shopifyApiCore{
         if($linkExist) {
             $body = json_decode($response->getBody(), true);
             $headerLink = $headers['Link'];
-            $response = $this->getPaginatedResults($headerLink, 'metafields');
+            $nextUrl = $this->getNextUrl($headerLink);
+            $response = $this->getPaginatedResults($nextUrl, 'metafields');
 
             $data = [];
             $data['metafields'] = array_merge($body['metafields'], $response['data']);
