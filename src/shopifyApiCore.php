@@ -220,7 +220,7 @@ class shopifyApiCore {
             if (!$this->accessToken) {
                 //Add the username,password to the URL if access token is not present
                 // Todo : parse_url doesn't identify host. Find out reason
-                $nextUrl = trim(str_replace($this->storeShopifyUrl, $this->userName . ":" . $this->password . '@' . $this->storeShopifyUrl, $nextUrl));
+                $nextUrl = str_replace($this->storeShopifyUrl, $this->userName . ":" . $this->password . '@' . $this->storeShopifyUrl, $nextUrl[0]);
             }
             if(filter_var($nextUrl, FILTER_VALIDATE_URL) === false){
                 return ['data' => $responseData, 'headers' => $responseHeader];
