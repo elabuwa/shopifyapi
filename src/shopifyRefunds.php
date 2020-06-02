@@ -56,4 +56,25 @@ class shopifyRefunds extends shopifyApiCore{
         }
     }
 
+    /**
+     * create refund
+     *
+     * @param string $orderId
+     * @param array $data
+     * @return array
+     */
+
+    public function createRefund($orderId, $data)
+    {
+        $this->queryUrl = $this->baseUrl . "orders/" . $orderId . "/refunds.json";
+        /** @var Response $response */
+        $response = $this->postData($data);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
 }
