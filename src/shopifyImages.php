@@ -37,11 +37,14 @@ class shopifyImages extends shopifyApiCore{
      * @param boolean $mainImage
      * @return array
      */
-    public function uploadImageFromUrl($productId, $src, $mainImage = false)
+    public function uploadImageFromUrl($productId, $src, $mainImage = false, $altTag = null)
     {
         $data['image']['src'] = $src;
         if($mainImage != false){
             $data['image']['position'] = 1;
+        }
+        if($altTag != null){
+            $data['image']['alt'] = $altTag;
         }
         $this->queryUrl = $this->baseUrl . "products/" . $productId . "/images.json";
         /** @var Response $response */
