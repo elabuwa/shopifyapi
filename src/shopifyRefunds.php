@@ -3,14 +3,17 @@ namespace shopifyApi;
 
 use GuzzleHttp\Psr7\Response;
 use shopifyApi\shopifyApiCore;
+use shopifyApi\shopifyProducts;
 
-class shopifyImages extends shopifyApiCore{
+class shopifyRefunds extends shopifyApiCore{
 
     /**
      * The construct function. send credentials provided by Shopify to instantiate object
      *
-     * @param array $credentials
+     * @param string $credentials
      */
+    private $credentials = [];
+
     public function __construct($credentials = [])
     {
         if(array_key_exists('userName', $credentials)){
@@ -28,25 +31,21 @@ class shopifyImages extends shopifyApiCore{
         if(array_key_exists('accessToken', $credentials)){
             $this->accessToken = $credentials['accessToken'];
         }
+        $this->credentials = $credentials;
         parent::__construct();
     }
 
     /**
-     * @param string $productId
-     * @param string $src
-     * @param boolean $mainImage
+     * Calculate refund
+     *
+     * @param string $orderId
+     * @param array $data
      * @return array
      */
-    public function uploadImageFromUrl($productId, $src, $mainImage = false, $altTag = null)
+
+    public function calculateRefund($orderId, $data)
     {
-        $data['image']['src'] = $src;
-        if($mainImage != false){
-            $data['image']['position'] = 1;
-        }
-        if($altTag != null){
-            $data['image']['alt'] = $altTag;
-        }
-        $this->queryUrl = $this->baseUrl . "products/" . $productId . "/images.json";
+        $this->queryUrl = $this->baseUrl . "orders/" . $orderId . "/refunds/calculate.json";
         /** @var Response $response */
         $response = $this->postData($data);
         if($this->responseObj){
@@ -56,4 +55,26 @@ class shopifyImages extends shopifyApiCore{
             return json_decode($response->getBody(), true);
         }
     }
+
+    /**
+     * create refund
+     *
+     * @param string $orderId
+     * @param array $data
+     * @return array
+     */
+
+    public function createRefund($orderId, $data)
+    {
+        $this->queryUrl = $this->baseUrl . "orders/" . $orderId . "/refunds.json";
+        /** @var Response $response */
+        $response = $this->postData($data);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
 }
