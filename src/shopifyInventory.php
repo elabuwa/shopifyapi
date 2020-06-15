@@ -92,12 +92,12 @@ class shopifyInventory extends shopifyApiCore{
 
     /**
      * 
-     * Get list of all invneotry for a locatin by it's ID
+     * Get list of all inventory for a locatin by it's ID
      * @param string $locationId
      * @return array
      */
 
-    public function updateVariantStock($locationId)
+    public function getLocationInventory($locationId)
     {
         $this->queryUrl = $this->baseUrl . "locations/" . $locationId . "/inventory_levels.json";
         /** @var Response $response */
@@ -109,4 +109,32 @@ class shopifyInventory extends shopifyApiCore{
             return json_decode($response->getBody(), true);
         }
     }
+
+    /**
+     *
+     * Update Inventory Qrt
+     * @param string $locationId
+     * @param string $itemId
+     * @param integer $qty
+     * @return array
+     */
+
+    public function updateInventory($locationId, $itemId, $qty)
+    {
+        $data = [
+            'inventory_item_id' => $itemId,
+            'location_id' => $locationId,
+            'available_adjustment' => $qty
+        ];
+        $this->queryUrl = $this->baseUrl . "inventory_levels/adjust.json";
+        /** @var Response $response */
+        $response = $this->postData($data);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
 }
