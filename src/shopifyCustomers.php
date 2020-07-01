@@ -42,11 +42,33 @@ class shopifyCustomers extends shopifyApiCore{
         $this->queryUrl = $this->baseUrl . "customers.json";
         /** @var Response $response */
         $response = $this->getData($params);
-        if($this->responseObj){
-            //Return response obj if set to true
-            return $response;
+
+        $headers = $response->getHeaders();
+
+        $linkExist = array_key_exists('Link', $headers);
+        if($linkExist) {
+            $body = json_decode($response->getBody(), true);
+            $headerLink = $headers['Link'];
+            $nextUrl = $this->getNextUrl($headerLink);
+            $response = $this->getPaginatedResults($nextUrl, 'customers');
+
+            $data = [];
+            $data['customers'] = array_merge($body['customers'], $response['data']);
+
+            if($this->responseObj){
+                //Return response obj if set to true
+                $mockResponse = new Response(200, $response['headers'], $data);
+                return $mockResponse;
+            } else {
+                return $data;
+            }
         } else {
-            return json_decode($response->getBody(), true);
+            if($this->responseObj){
+                //Return response obj if set to true
+                return $response;
+            } else {
+                return json_decode($response->getBody(), true);
+            }
         }
     }
 
