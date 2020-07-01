@@ -16,7 +16,7 @@ $ composer require elabuwa/shopifyapi
 The response is a Guzzle Response object
 
 ```php
-$credentials => [
+$credentials = [
     'userName' => env('SHOPIFY_USERNAME', ''),
     'password' => env('SHOPIFY_PASSWORD', ''),
     'apiVersion' => env('SHOPIFY_API_VERSION', ''),
