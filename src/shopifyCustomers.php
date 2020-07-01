@@ -39,6 +39,7 @@ class shopifyCustomers extends shopifyApiCore{
      */
     public function retrieveCustomers($params = [])
     {
+        $params['limit'] = 250;
         $this->queryUrl = $this->baseUrl . "customers.json";
         /** @var Response $response */
         $response = $this->getData($params);
