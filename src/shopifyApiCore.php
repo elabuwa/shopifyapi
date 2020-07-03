@@ -151,6 +151,21 @@ class shopifyApiCore {
         return $response;
     }
 
+    protected function deleteData($deleteData = [], $headers = [])
+    {
+        $this->verifyCredentials();
+        $client = new Client;
+        if(isset($this->accessToken)){
+            $headers['X-Shopify-Access-Token'] = $this->accessToken;
+        }
+        $response = $client->request('DELETE', $this->queryUrl, [
+            'json' => $deleteData,
+            'headers' => $headers,
+            'http_errors' => $this->http_errors
+        ]);
+        return $response;
+    }
+
     /**
      * Retrieve Contents for a given url
      * @param string $url

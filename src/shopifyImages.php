@@ -70,4 +70,29 @@ class shopifyImages extends shopifyApiCore{
         }
     }
 
+    public function uploadImage($productId, $data){
+        $this->queryUrl = $this->baseUrl . "products/" . $productId . "/images.json";
+        /** @var Response $response */
+        $response = $this->postData($data);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
+    public function deleteImage($productId, $imageId)
+    {
+        $this->queryUrl = $this->baseUrl . "products/" . $productId . "/images/" . $imageId . ".json";
+        /** @var Response $response */
+        $response = $this->deleteData();
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
 }
