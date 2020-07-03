@@ -56,4 +56,18 @@ class shopifyImages extends shopifyApiCore{
             return json_decode($response->getBody(), true);
         }
     }
+
+    public function getAllImages($productId)
+    {
+        $this->queryUrl = $this->baseUrl . "products/" . $productId . "/images.json";
+        /** @var Response $response */
+        $response = $this->getData();
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
 }
