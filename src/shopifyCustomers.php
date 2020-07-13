@@ -37,9 +37,53 @@ class shopifyCustomers extends shopifyApiCore{
      * @param array $params
      * @return array
      */
-    public function retrieveCustomers($params = [])
+    public function retrieveAllCustomers()
     {
         $params['limit'] = 250;
+        $this->queryUrl = $this->baseUrl . "customers.json";
+        /** @var Response $response */
+        $response = $this->getData($params);
+
+        $headers = $response->getHeaders();
+
+        $linkExist = array_key_exists('Link', $headers);
+        if($linkExist) {
+            $body = json_decode($response->getBody(), true);
+            $headerLink = $headers['Link'];
+            $nextUrl = $this->getNextUrl($headerLink);
+            $response = $this->getPaginatedResults($nextUrl, 'customers');
+            $data = [];
+            $data['customers'] = array_merge($body['customers'], $response['data']);
+
+            if($this->responseObj){
+                //Return response obj if set to true
+                $mockResponse = new Response(200, $response['headers'], $data);
+                return $mockResponse;
+            } else {
+                return $data;
+            }
+        } else {
+            if($this->responseObj){
+                //Return response obj if set to true
+                return $response;
+            } else {
+                return json_decode($response->getBody(), true);
+            }
+        }
+    }
+
+    /**
+     * Retrieve customers from store
+     * Send params array to define extra search params
+     *
+     * @param array $params
+     * @return array
+     */
+    public function retrieveCustomers($params = [])
+    {
+        if(!array_key_exists('limit', $params)){
+            $params['limit'] = 250;
+        }
         $this->queryUrl = $this->baseUrl . "customers.json";
         /** @var Response $response */
         $response = $this->getData($params);
