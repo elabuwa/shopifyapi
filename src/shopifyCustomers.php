@@ -73,6 +73,31 @@ class shopifyCustomers extends shopifyApiCore{
     }
 
     /**
+     * Search for customers in store
+     * Send params array to define extra search params
+     *
+     * @param array $params
+     * @return void
+     */
+    public function searchCustomers($params = [])
+    {
+        $queryString = '';
+        foreach($params as $key=>$value){
+            $queryString.= $key . ':' . $value . ';';
+        }
+        $queryString = rtrim($queryString, ';');
+        $this->queryUrl = $this->baseUrl . "customers/search.json?query=" . $queryString;
+        /** @var Response $response */
+        $response = $this->getData($params);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
+    /**
      * Retrieve customers from store
      * Send params array to define extra search params
      *
