@@ -51,7 +51,7 @@ class shopifyCustomers extends shopifyApiCore{
         }
         $queryString = rtrim($queryString, ';');
         $this->queryUrl = $this->baseUrl . "customers/search.json?query=" . $queryString;
-        $response = $this->getData($params);
+        $response = $this->getData();
         return $response;
     }
 
