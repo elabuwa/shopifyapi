@@ -126,4 +126,26 @@ class shopifyVariants extends shopifyApiCore{
             return json_decode($response->getBody(), true);
         }
     }
+
+    /**
+     *
+     * Update variant
+     *
+     * @param string $variantId
+     * @param array $data
+     * @return array
+     */
+
+    public function updateVariant($variantId, $data)
+    {
+        $this->queryUrl = $this->baseUrl . "variants/$variantId.json";
+        /** @var Response $response */
+        $response = $this->putData($data);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
 }
