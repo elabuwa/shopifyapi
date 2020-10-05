@@ -137,4 +137,25 @@ class shopifyInventory extends shopifyApiCore{
         }
     }
 
+    /**
+     *
+     * Update Inventory Item
+     * @param string $inventoryTtemId
+     * @param array $data
+     * @return array
+     */
+
+    public function updateInventoryItem($inventoryTtemId, $data)
+    {
+        $this->queryUrl = $this->baseUrl . "inventory_items/$inventoryTtemId.json";
+        /** @var Response $response */
+        $response = $this->putData($data);
+        if($this->responseObj){
+            //Return response obj if set to true
+            return $response;
+        } else {
+            return json_decode($response->getBody(), true);
+        }
+    }
+
 }
